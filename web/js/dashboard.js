@@ -501,6 +501,53 @@ function initEnergie(e) {
   );
   addSource("chart-battery", bat.source);
   addSource("chart-battery-trend", bat.source);
+
+  // SAIDI – Stromausfälle
+  const gr = e.grid_reliability;
+  const ctxSaidi = document.getElementById("chart-saidi").getContext("2d");
+  new Chart(ctxSaidi, {
+    type: "line",
+    data: {
+      labels: gr.saidi.labels,
+      datasets: [
+        {
+          label: "SAIDI (min/Jahr)",
+          data: gr.saidi.values,
+          borderColor: "#4a9eff",
+          backgroundColor: makeGradient(ctxSaidi, "rgba(74,158,255,0.25)", "rgba(74,158,255,0)"),
+          fill: true,
+          tension: 0.3,
+          pointRadius: 3,
+        },
+      ],
+    },
+    options: lineOptions("Minuten / Jahr", 0),
+  });
+  addSource("chart-saidi", gr.source);
+
+  // Redispatch – Netzengpässe
+  const ctxRd = document.getElementById("chart-redispatch").getContext("2d");
+  new Chart(ctxRd, {
+    type: "bar",
+    data: {
+      labels: gr.redispatch_gwh.labels,
+      datasets: [
+        {
+          label: "Redispatch (GWh)",
+          data: gr.redispatch_gwh.values,
+          backgroundColor: gr.redispatch_gwh.values.map((v) =>
+            v > 15000 ? "rgba(192,21,42,0.7)" : v > 10000 ? "rgba(240,192,64,0.7)" : "rgba(62,207,142,0.7)",
+          ),
+          borderRadius: 4,
+        },
+      ],
+    },
+    options: {
+      ...lineOptions("GWh", 0),
+      plugins: { ...lineOptions("GWh", 0).plugins, legend: { display: false } },
+    },
+  });
+  addSource("chart-redispatch", gr.source);
 }
 
 function initDemografie(d) {
