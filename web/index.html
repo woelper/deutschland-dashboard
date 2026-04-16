@@ -143,10 +143,15 @@
             <section class="section">
                 <h2 class="section-title">Infrastruktur &amp; Verkehr</h2>
                 <div class="chart-grid">
-                    <div class="chart-card">
-                        <h3>Personenbahnhöfe</h3>
-                        <p class="chart-note">Anzahl aktiver Bahnhöfe</p>
+                    <div class="chart-card wide">
+                        <h3>Bahnhöfe &amp; Güterverkehr</h3>
+                        <p class="chart-note">Personen- und Industriebahnhöfe (links) vs. LKW-Anteil am Güterverkehr in % der Tonnenkilometer (rechts)</p>
                         <canvas id="chart-bahnhoefe"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Pünktlichkeit Fernverkehr</h3>
+                        <p class="chart-note">% der Züge mit &lt; 6 min Verspätung</p>
+                        <canvas id="chart-puenktlichkeit"></canvas>
                     </div>
                     <div class="chart-card">
                         <h3>Flugreisende</h3>
@@ -158,15 +163,30 @@
                         <p class="chart-note">Zugelassene PKW in Mio.</p>
                         <canvas id="chart-pkw"></canvas>
                     </div>
-                    <div class="chart-card">
-                        <h3>Pünktlichkeit Fernverkehr</h3>
-                        <p class="chart-note">% der Züge mit &lt; 6 min Verspätung</p>
-                        <canvas id="chart-puenktlichkeit"></canvas>
-                    </div>
                     <div class="chart-card wide">
                         <h3>Staus auf Autobahnen</h3>
                         <p class="chart-note">Staumeldungen pro Jahr in Tausend (ADAC)</p>
                         <canvas id="chart-staus"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Investitionen Schiene vs. Straße</h3>
+                        <p class="chart-note">Bundes-Investitionen in Mrd. € (Allianz pro Schiene)</p>
+                        <canvas id="chart-investitionen"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Internetgeschwindigkeit · EU-Vergleich</h3>
+                        <p class="chart-note">Median Download-Geschwindigkeit Festnetz in Mbit/s (Ookla 2024)</p>
+                        <canvas id="chart-internet-speed"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Internetpreise · EU-Vergleich</h3>
+                        <p class="chart-note">Monatlicher Preis für ~100 Mbit/s Festnetz-Anschluss in € (cable.co.uk / BEREC 2024)</p>
+                        <canvas id="chart-internet-price"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>5G-Mobilfunkabdeckung · EU-Vergleich</h3>
+                        <p class="chart-note">Anteil der besiedelten Fläche mit 5G-Versorgung in % (European 5G Observatory 2024)</p>
+                        <canvas id="chart-mobilfunk"></canvas>
                     </div>
                 </div>
             </section>
@@ -183,6 +203,11 @@
                         <h3>Gesundheitsausgaben</h3>
                         <p class="chart-note">in % des BIP</p>
                         <canvas id="chart-health"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Staatsquote</h3>
+                        <p class="chart-note">Staatsausgaben in % des BIP (1980–2024)</p>
+                        <canvas id="chart-staatsquote"></canvas>
                     </div>
                 </div>
             </section>

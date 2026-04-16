@@ -380,17 +380,22 @@ function initEnergie(e) {
 
   // European CO2 intensity comparison
   const co2eu = e.co2_intensity_europe_2023;
+  const co2euSorted = co2eu.labels
+    .map((label, i) => ({ label, value: co2eu.values[i] }))
+    .sort((a, b) => b.value - a.value);
+  const co2euLabels = co2euSorted.map((d) => d.label);
+  const co2euValues = co2euSorted.map((d) => d.value);
   const ctxCO2EU = document
     .getElementById("chart-co2-europe")
     .getContext("2d");
   new Chart(ctxCO2EU, {
     type: "bar",
     data: {
-      labels: co2eu.labels,
+      labels: co2euLabels,
       datasets: [
         {
-          data: co2eu.values,
-          backgroundColor: co2eu.labels.map((l) =>
+          data: co2euValues,
+          backgroundColor: co2euLabels.map((l) =>
             l === "Deutschland" ? COLORS.gold : COLORS.blue,
           ),
           borderRadius: 5,
@@ -830,26 +835,77 @@ function initWaehler(v) {
 }
 
 function initInfrastruktur(inf) {
-  // Bahnhöfe
+  // Bahnhöfe (Personen + Industrie + LKW-Anteil)
   const ctxBhf = document.getElementById("chart-bahnhoefe").getContext("2d");
+  const baseBhfOpts = lineOptions("Anzahl", 0);
   new Chart(ctxBhf, {
     type: "line",
     data: {
       labels: inf.bahnhoefe.labels,
       datasets: [
         {
-          data: inf.bahnhoefe.values,
+          label: "Personenbahnhöfe",
+          data: inf.bahnhoefe.personen,
           borderColor: COLORS.red,
-          backgroundColor: makeGradient(ctxBhf, "rgba(192,21,42,0.3)", "rgba(192,21,42,0)"),
+          backgroundColor: makeGradient(ctxBhf, "rgba(192,21,42,0.25)", "rgba(192,21,42,0)"),
           borderWidth: 2.5,
           pointBackgroundColor: COLORS.red,
-          pointRadius: 4,
+          pointRadius: 3,
           fill: true,
           tension: 0.35,
+          yAxisID: "y",
+        },
+        {
+          label: "Industriebahnhöfe (Gleisanschlüsse)",
+          data: inf.bahnhoefe.industrie,
+          borderColor: COLORS.gold,
+          backgroundColor: makeGradient(ctxBhf, "rgba(212,160,23,0.2)", "rgba(212,160,23,0)"),
+          borderWidth: 2.5,
+          pointBackgroundColor: COLORS.gold,
+          pointRadius: 3,
+          fill: true,
+          tension: 0.35,
+          yAxisID: "y",
+        },
+        {
+          label: "LKW-Anteil Güterverkehr (%)",
+          data: inf.bahnhoefe.lkw_anteil_pct,
+          borderColor: "#4a9eff",
+          backgroundColor: "rgba(74,158,255,0)",
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointBackgroundColor: "#4a9eff",
+          pointRadius: 3,
+          fill: false,
+          tension: 0.3,
+          yAxisID: "y1",
         },
       ],
     },
-    options: lineOptions("Bahnhöfe", 4000),
+    options: {
+      ...baseBhfOpts,
+      plugins: {
+        ...baseBhfOpts.plugins,
+        legend: { display: true, labels: { color: "#8a90a0", font: { size: 11 } } },
+      },
+      scales: {
+        ...baseBhfOpts.scales,
+        y: {
+          ...baseBhfOpts.scales.y,
+          position: "left",
+          title: { display: true, text: "Anzahl Bahnhöfe", color: "#8a90a0" },
+        },
+        y1: {
+          position: "right",
+          beginAtZero: false,
+          suggestedMin: 40,
+          suggestedMax: 80,
+          grid: { drawOnChartArea: false },
+          ticks: { color: "#8a90a0", callback: (v) => v + "%" },
+          title: { display: true, text: "LKW-Anteil tkm (%)", color: "#4a9eff" },
+        },
+      },
+    },
   });
   addSource("chart-bahnhoefe", inf.bahnhoefe.source);
 
@@ -952,6 +1008,92 @@ function initInfrastruktur(inf) {
     },
   });
   addSource("chart-staus", inf.staus_autobahn.source);
+
+  // Investitionen Schiene vs. Straße (gesamt)
+  const inv = inf.investitionen_gesamt;
+  const ctxInv = document.getElementById("chart-investitionen").getContext("2d");
+  new Chart(ctxInv, {
+    type: "bar",
+    data: {
+      labels: inv.labels,
+      datasets: [
+        {
+          label: "Schiene",
+          data: inv.schiene,
+          backgroundColor: "rgba(62,207,142,0.8)",
+          borderRadius: 4,
+        },
+        {
+          label: "Straße",
+          data: inv.strasse,
+          backgroundColor: "rgba(192,21,42,0.75)",
+          borderRadius: 4,
+        },
+      ],
+    },
+    options: {
+      ...BASE_CHART_OPTIONS,
+      plugins: {
+        ...BASE_CHART_OPTIONS.plugins,
+        legend: { display: true, labels: { color: "#8a90a0", font: { size: 11 } } },
+      },
+      scales: {
+        x: { grid: { color: COLORS.gridLine } },
+        y: {
+          grid: { color: COLORS.gridLine },
+          title: { display: true, text: "Mrd. € / Jahr", color: "#8a90a0" },
+          suggestedMin: 0,
+        },
+      },
+    },
+  });
+  addSource("chart-investitionen", inv.source);
+
+  // EU-Vergleich helper: sortiert absteigend, hebt Deutschland in Gold hervor
+  const renderEuBarChart = (canvasId, dataObj, axisLabel, sortDesc = true) => {
+    const sorted = dataObj.labels
+      .map((label, i) => ({ label, value: dataObj.values[i] }))
+      .sort((a, b) => (sortDesc ? b.value - a.value : a.value - b.value));
+    const labels = sorted.map((d) => d.label);
+    const values = sorted.map((d) => d.value);
+    const ctx = document.getElementById(canvasId).getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            data: values,
+            backgroundColor: labels.map((l) =>
+              l === "Deutschland" ? COLORS.gold : COLORS.blue,
+            ),
+            borderRadius: 5,
+            borderSkipped: false,
+          },
+        ],
+      },
+      options: {
+        ...BASE_CHART_OPTIONS,
+        plugins: { ...BASE_CHART_OPTIONS.plugins, legend: { display: false } },
+        scales: {
+          x: { grid: { color: COLORS.gridLine } },
+          y: {
+            grid: { color: COLORS.gridLine },
+            title: { display: true, text: axisLabel, color: "#8a90a0" },
+            suggestedMin: 0,
+          },
+        },
+      },
+    });
+    addSource(canvasId, dataObj.source);
+  };
+
+  // Best (highest speed) on the left
+  renderEuBarChart("chart-internet-speed", inf.internet_speed_eu, "Mbit/s", true);
+  // Cheapest on the left
+  renderEuBarChart("chart-internet-price", inf.internet_price_eu, "€ / Monat", false);
+  // Highest 5G coverage on the left
+  renderEuBarChart("chart-mobilfunk", inf.mobilfunk_5g_eu, "% Abdeckung", true);
 }
 
 function initSozial(s) {
@@ -1025,6 +1167,31 @@ function initSozial(s) {
     options: lineOptions("% des BIP", 10),
   });
   addSource("chart-health", s.health_spending_by_year.source);
+
+  // Staatsquote
+  const sq = s.staatsquote_pct_gdp;
+  const ctxSQ = document.getElementById("chart-staatsquote").getContext("2d");
+  new Chart(ctxSQ, {
+    type: "line",
+    data: {
+      labels: sq.labels,
+      datasets: [
+        {
+          label: "Staatsquote",
+          data: sq.values,
+          borderColor: COLORS.gold,
+          backgroundColor: makeGradient(ctxSQ, "rgba(212,160,23,0.3)", "rgba(212,160,23,0)"),
+          borderWidth: 2.5,
+          pointBackgroundColor: COLORS.gold,
+          pointRadius: 4,
+          fill: true,
+          tension: 0.3,
+        },
+      ],
+    },
+    options: lineOptions("% des BIP", 40),
+  });
+  addSource("chart-staatsquote", sq.source);
 }
 
 function initRente(r) {
@@ -1074,6 +1241,16 @@ function initRente(r) {
     {
       label: "Rentenempfänger",
       value: (r.pensioners_2024 / 1e6).toFixed(1) + " Mio.",
+      cls: "",
+    },
+    {
+      label: "Ø Rente (brutto/Monat)",
+      value: r.average_pension_eur_month_2024.toLocaleString("de-DE") + " €",
+      cls: "highlight-gold",
+    },
+    {
+      label: "Standardrente (45 EP, West)",
+      value: r.standard_pension_eur_month_2024.toLocaleString("de-DE") + " €",
       cls: "",
     },
     {
