@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Deutschland Dashboard</title>
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <div class="header-inner">
+                <div class="flag-stripe black"></div>
+                <div class="flag-stripe red"></div>
+                <div class="flag-stripe gold"></div>
+                <div class="header-text">
+                    <h1>Deutschland Dashboard</h1>
+                    <p class="subtitle">
+                        Wirtschaft · Demografie · Infrastruktur
+                    </p>
+                </div>
+                <div class="meta-info">
+                    <span id="data-updated"></span>
+                    <a class="sources-link" href="#sources">Quellen</a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="section">
+                <h2 class="section-title">Kennzahlen im Überblick</h2>
+                <div class="kpi-grid" id="kpi-cards"></div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Demografie</h2>
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>Altersstruktur der Bevölkerung 2023</h3>
+                        <p class="chart-note">Anteil je Altersgruppe in %</p>
+                        <canvas id="chart-age-groups"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Medianalter</h3>
+                        <p class="chart-note">in Jahren</p>
+                        <canvas id="chart-median-age"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Gesamtbevölkerung</h3>
+                        <p class="chart-note">in Millionen</p>
+                        <canvas id="chart-population"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Geburtenrate</h3>
+                        <p class="chart-note">Kinder je Frau (TFR)</p>
+                        <canvas id="chart-fertility"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Migration &amp; Staatsbürgerschaft</h3>
+                        <p class="chart-note">Anteil an der Gesamtbevölkerung in % · Migrationshintergrund ab 2005 (Mikrozensus)</p>
+                        <canvas id="chart-migration"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Energiewende</h2>
+                <div class="chart-grid">
+                    <div class="chart-card wide">
+                        <h3>Erneuerbare Energien · Strompreis</h3>
+                        <p class="chart-note">Zwei Kennzahlen im Zeitverlauf (2000–2023)</p>
+                        <canvas id="chart-energy-combined" style="max-height:360px"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Treibhausgasemissionen</h3>
+                        <p class="chart-note">in Mio. Tonnen CO₂-Äquivalent (2000–2023)</p>
+                        <canvas id="chart-co2"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Anteil Strom am Endenergieverbrauch</h3>
+                        <p class="chart-note">Nur ~22% der Energie ist Strom — davon ~11% erneuerbar. 78% des Verbrauchs (Wärme, Verkehr, Industrie) sind kaum elektrifiziert.</p>
+                        <canvas id="chart-electricity-share"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Stromerzeugung 2025 — Kapazität vs. Nutzung</h3>
+                        <p class="chart-note">
+                            Installierte Kapazität und durchschnittliche Erzeugung in GW
+                        </p>
+                        <canvas id="chart-capacity"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>CO₂-Intensität der Stromerzeugung in Europa</h3>
+                        <p class="chart-note">gCO₂eq/kWh (2023) · vgl. Electricity Maps / EEA</p>
+                        <canvas id="chart-co2-europe"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Batteriespeicher — Installiert vs. Ziel</h3>
+                        <p class="chart-note">in GW · Quelle: Netzentwicklungsplan Strom (BMWK)</p>
+                        <canvas id="chart-battery"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Batteriespeicher — Ausbau</h3>
+                        <p class="chart-note">Installierte Leistung in GW (Y-Achse skaliert auf NEP-Ziel 2045)</p>
+                        <canvas id="chart-battery-trend"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Stromausfälle (SAIDI)</h3>
+                        <p class="chart-note">Ø Unterbrechungsdauer je Verbraucher in Minuten/Jahr</p>
+                        <canvas id="chart-saidi"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Redispatch — Netzengpässe</h3>
+                        <p class="chart-note">Engpassmanagement in GWh/Jahr</p>
+                        <canvas id="chart-redispatch"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Wahlberechtigte</h2>
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>Altersverteilung der Wahlberechtigten</h3>
+                        <p class="chart-note">Bundestagswahl 2021</p>
+                        <canvas id="chart-voters"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Wähler-Kennzahlen</h3>
+                        <p class="chart-note">Bundestagswahl 2021</p>
+                        <div class="stat-box-grid" id="voter-stats"></div>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Wahlberechtigte nach Generation</h3>
+                        <p class="chart-note">Anteil je Generation · BTW 2021</p>
+                        <div class="retirement-split-wrap">
+                            <canvas id="chart-voter-retirement"></canvas>
+                            <div id="voter-retirement-legend" class="retirement-legend"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Infrastruktur &amp; Verkehr</h2>
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>Personenbahnhöfe</h3>
+                        <p class="chart-note">Anzahl aktiver Bahnhöfe</p>
+                        <canvas id="chart-bahnhoefe"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Flugreisende</h3>
+                        <p class="chart-note">Passagiere an deutschen Flughäfen in Mio.</p>
+                        <canvas id="chart-flugreisende"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>PKW-Bestand</h3>
+                        <p class="chart-note">Zugelassene PKW in Mio.</p>
+                        <canvas id="chart-pkw"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Pünktlichkeit Fernverkehr</h3>
+                        <p class="chart-note">% der Züge mit &lt; 6 min Verspätung</p>
+                        <canvas id="chart-puenktlichkeit"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Staus auf Autobahnen</h3>
+                        <p class="chart-note">Staumeldungen pro Jahr in Tausend (ADAC)</p>
+                        <canvas id="chart-staus"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Sozialausgaben</h2>
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>Sozialausgaben nach Bereich 2022</h3>
+                        <p class="chart-note">in % des BIP</p>
+                        <canvas id="chart-social-breakdown"></canvas>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Gesundheitsausgaben</h3>
+                        <p class="chart-note">in % des BIP</p>
+                        <canvas id="chart-health"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Rente &amp; Alterssicherung</h2>
+                <div class="chart-grid">
+                    <div class="chart-card wide">
+                        <h3>Erwerbstätige je Rentenempfänger</h3>
+                        <p class="chart-note">
+                            Verhältnis Beitragszahler zu Rentenbeziehern (*
+                            Projektion)
+                        </p>
+                        <canvas id="chart-ratio"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Renten-Kennzahlen</h3>
+                        <p class="chart-note">Stand 2024/2025</p>
+                        <div class="stat-box-grid" id="pension-stats"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sources">
+                <h2 class="section-title">Quellen</h2>
+                <ul class="sources-list" id="sources-list"></ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                Deutschland Dashboard · Daten aus öffentlichen Quellen · Kein
+                Anspruch auf Vollständigkeit
+            </p>
+            <p class="footer-note">
+                KPI-Daten: <code>data/kpis.json</code> · Visualisierung:
+                <a href="https://www.chartjs.org/">Chart.js</a>
+            </p>
+        </footer>
+
+        <script src="js/dashboard.js"></script>
+    </body>
+</html>
