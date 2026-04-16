@@ -123,6 +123,13 @@
       "unit": "% des Endenergieverbrauchs",
       "note": "Anteil Strom am gesamten Endenergieverbrauch, sowie Anteil erneuerbarer Strom (Strom × EE-Anteil). Der Rest entfällt auf Wärme, Verkehr, Prozesswärme.",
       "source": { "label": "AG Energiebilanzen (AGEB)", "url": "https://ag-energiebilanzen.de/daten-und-fakten/bilanzen-1990-bis-2023/" }
+    },
+    "strompreis_bestandteile_2024": {
+      "labels": ["Beschaffung & Vertrieb", "Netzentgelte", "Mehrwertsteuer (19%)", "Stromsteuer", "Konzessionsabgabe", "Umlagen (KWKG, Offshore, §19)"],
+      "values": [14.0, 10.5, 6.5, 2.05, 1.66, 1.6],
+      "unit": "ct/kWh (Haushaltskunde, Ø 2024)",
+      "note": "Durchschnittlicher Haushaltsstrompreis ~36 ct/kWh. EEG-Umlage seit Juli 2022 entfallen (Finanzierung über Bundeshaushalt).",
+      "source": { "label": "BDEW Strompreisanalyse 2024", "url": "https://www.bdew.de/service/daten-und-grafiken/bdew-strompreisanalyse/" }
     }
   },
   "demographics": {
@@ -305,6 +312,28 @@
       "values": [99, 99, 99, 96, 92, 95, 89, 86, 84, 76, 67, 50, 25],
       "unit": "% 5G-Abdeckung (besiedelte Fläche)",
       "source": { "label": "European 5G Observatory / DESI 2024", "url": "https://5gobservatory.eu/" }
+    }
+  },
+  "staatsfinanzen": {
+    "steueraufkommen_ebene_2024": {
+      "labels": ["Bund", "Länder", "Gemeinden", "EU-Eigenmittel"],
+      "values": [388, 365, 127, 36],
+      "unit": "Mrd. € (2024)",
+      "note": "Verteilung des Gesamtsteueraufkommens nach Ebene. Gesamt: 916 Mrd. €.",
+      "source": { "label": "BMF – Steuereinnahmen", "url": "https://www.bundesfinanzministerium.de/Web/DE/Themen/Steuern/Steuerschaetzungen_und_Steuereinnahmen/steuerschaetzungen_und_steuereinnahmen.html" }
+    },
+    "steueraufkommen_art_2024": {
+      "labels": ["Umsatzsteuer", "Lohnsteuer", "Gewerbesteuer", "Veranl. ESt", "Körperschaftsteuer", "Energiesteuer", "Kapitalertragsteuer", "Grundsteuer", "Versicherungsteuer", "Tabaksteuer", "Solidaritätszuschlag", "Erbschaftsteuer", "KFZ-Steuer", "Stromsteuer"],
+      "values": [291, 243, 75, 75, 46, 37, 28, 16, 16, 14, 13, 11, 9, 7],
+      "unit": "Mrd. € (2024)",
+      "source": { "label": "BMF / Destatis – Steuereinnahmen nach Steuerarten", "url": "https://www.bundesfinanzministerium.de/Web/DE/Themen/Steuern/Steuerschaetzungen_und_Steuereinnahmen/steuerschaetzungen_und_steuereinnahmen.html" }
+    },
+    "ausgaben_bund_2024": {
+      "labels": ["Arbeit & Soziales", "Allg. Finanzverwaltung", "Verteidigung", "Verkehr & Digitales", "Bundesschuld (Zinsen)", "Bildung & Forschung", "Gesundheit", "Inneres", "Familie/Senioren/Frauen/Jugend", "Entwicklungszusammenarbeit", "Wirtschaft & Klimaschutz", "Auswärtiges Amt", "Sonstige Ressorts"],
+      "values": [175, 80, 52, 38, 37, 21, 17, 14, 14, 12, 11, 7, 16],
+      "unit": "Mrd. € (Bundeshaushalt 2024)",
+      "note": "Soll-Ausgaben des Bundes nach Einzelplänen. Gesamt: ~477 Mrd. €.",
+      "source": { "label": "BMF – Bundeshaushalt 2024", "url": "https://www.bundeshaushalt.de/" }
     }
   }
 }

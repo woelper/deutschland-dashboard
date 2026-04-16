@@ -78,6 +78,7 @@ fetch("data/kpis.json")
     initWaehler(data.voters);
     initInfrastruktur(data.infrastructure);
     initSozial(data.social_spending);
+    initStaatsfinanzen(data.staatsfinanzen);
     initRente(data.retirement);
     initSources(data.meta.sources);
   })
@@ -553,6 +554,42 @@ function initEnergie(e) {
     },
   });
   addSource("chart-redispatch", gr.source);
+
+  // Strompreis-Bestandteile 2024 (horizontal bar)
+  const sp = e.strompreis_bestandteile_2024;
+  const ctxSp = document.getElementById("chart-strompreis-bestandteile").getContext("2d");
+  const spSorted = sp.labels
+    .map((label, i) => ({ label, value: sp.values[i] }))
+    .sort((a, b) => b.value - a.value);
+  const spColors = ["#4a9eff", "#3ecf8e", "#c0152a", "#d4a017", "#a76cf2", "#f08c40"];
+  new Chart(ctxSp, {
+    type: "bar",
+    data: {
+      labels: spSorted.map((d) => d.label),
+      datasets: [
+        {
+          data: spSorted.map((d) => d.value),
+          backgroundColor: spSorted.map((_, i) => spColors[i % spColors.length]),
+          borderRadius: 5,
+          borderSkipped: false,
+        },
+      ],
+    },
+    options: {
+      ...BASE_CHART_OPTIONS,
+      indexAxis: "y",
+      plugins: { ...BASE_CHART_OPTIONS.plugins, legend: { display: false } },
+      scales: {
+        x: {
+          grid: { color: COLORS.gridLine },
+          title: { display: true, text: "ct/kWh", color: "#8a90a0" },
+          suggestedMin: 0,
+        },
+        y: { grid: { display: false } },
+      },
+    },
+  });
+  addSource("chart-strompreis-bestandteile", sp.source);
 }
 
 function initDemografie(d) {
@@ -1192,6 +1229,114 @@ function initSozial(s) {
     options: lineOptions("% des BIP", 40),
   });
   addSource("chart-staatsquote", sq.source);
+}
+
+function initStaatsfinanzen(sf) {
+  // Steueraufkommen nach Ebene (doughnut)
+  const se = sf.steueraufkommen_ebene_2024;
+  const ctxSE = document.getElementById("chart-steuer-ebene").getContext("2d");
+  const ebeneColors = ["#c0152a", "#d4a017", "#4a9eff", "#3ecf8e"];
+  new Chart(ctxSE, {
+    type: "doughnut",
+    data: {
+      labels: se.labels,
+      datasets: [
+        {
+          data: se.values,
+          backgroundColor: ebeneColors,
+          borderColor: "#1b1e26",
+          borderWidth: 2,
+        },
+      ],
+    },
+    options: {
+      ...BASE_CHART_OPTIONS,
+      plugins: {
+        ...BASE_CHART_OPTIONS.plugins,
+        legend: { display: true, position: "right", labels: { color: "#e8eaf0", font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: (c) => `${c.label}: ${c.parsed} Mrd. €`,
+          },
+        },
+      },
+    },
+  });
+  addSource("chart-steuer-ebene", se.source);
+
+  // Steueraufkommen nach Steuerart (horizontal bar, sorted)
+  const sa = sf.steueraufkommen_art_2024;
+  const saSorted = sa.labels
+    .map((label, i) => ({ label, value: sa.values[i] }))
+    .sort((a, b) => b.value - a.value);
+  const ctxSA = document.getElementById("chart-steuer-art").getContext("2d");
+  new Chart(ctxSA, {
+    type: "bar",
+    data: {
+      labels: saSorted.map((d) => d.label),
+      datasets: [
+        {
+          data: saSorted.map((d) => d.value),
+          backgroundColor: saSorted.map((d) =>
+            d.value > 100 ? COLORS.red : d.value > 30 ? COLORS.gold : COLORS.blue,
+          ),
+          borderRadius: 4,
+          borderSkipped: false,
+        },
+      ],
+    },
+    options: {
+      ...BASE_CHART_OPTIONS,
+      indexAxis: "y",
+      plugins: { ...BASE_CHART_OPTIONS.plugins, legend: { display: false } },
+      scales: {
+        x: {
+          grid: { color: COLORS.gridLine },
+          title: { display: true, text: "Mrd. €", color: "#8a90a0" },
+          suggestedMin: 0,
+        },
+        y: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      },
+    },
+  });
+  addSource("chart-steuer-art", sa.source);
+
+  // Bundeshaushalt – Ausgaben nach Ressort (horizontal bar, sorted)
+  const ah = sf.ausgaben_bund_2024;
+  const ahSorted = ah.labels
+    .map((label, i) => ({ label, value: ah.values[i] }))
+    .sort((a, b) => b.value - a.value);
+  const ctxAH = document.getElementById("chart-bundeshaushalt").getContext("2d");
+  new Chart(ctxAH, {
+    type: "bar",
+    data: {
+      labels: ahSorted.map((d) => d.label),
+      datasets: [
+        {
+          data: ahSorted.map((d) => d.value),
+          backgroundColor: ahSorted.map((d) =>
+            d.value > 100 ? COLORS.red : d.value > 30 ? COLORS.gold : COLORS.blue,
+          ),
+          borderRadius: 4,
+          borderSkipped: false,
+        },
+      ],
+    },
+    options: {
+      ...BASE_CHART_OPTIONS,
+      indexAxis: "y",
+      plugins: { ...BASE_CHART_OPTIONS.plugins, legend: { display: false } },
+      scales: {
+        x: {
+          grid: { color: COLORS.gridLine },
+          title: { display: true, text: "Mrd. €", color: "#8a90a0" },
+          suggestedMin: 0,
+        },
+        y: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      },
+    },
+  });
+  addSource("chart-bundeshaushalt", ah.source);
 }
 
 function initRente(r) {
